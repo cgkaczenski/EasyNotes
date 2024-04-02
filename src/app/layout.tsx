@@ -44,7 +44,7 @@ export default async function RootLayout({
             disableTransitionOnChange
             storageKey="easynotes-theme-2"
           >
-            <Toaster />
+            <Toaster position="bottom-center" />
             {children}
           </ThemeProvider>
         </body>

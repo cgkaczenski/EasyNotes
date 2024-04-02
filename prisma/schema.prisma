@@ -24,6 +24,7 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  Documents             Document[]
 }
 
 model Account {
@@ -78,4 +79,24 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Document {
+  id               String     @id @default(cuid())
+  title            String
+  userId           String
+  isArchived       Boolean    @default(false)
+  content          String?
+  parentDocument   Document?  @relation("ParentDocument", fields: [parentDocumentId], references: [id])
+  parentDocumentId String?
+  children         Document[] @relation("ParentDocument")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  coverImageUrl    String?
+  icon             String?
+  isPublished      Boolean    @default(false)
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, parentDocumentId])
 }
