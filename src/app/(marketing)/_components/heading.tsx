@@ -27,7 +27,7 @@ export const Heading = () => {
       {user && !isLoading && (
         <Button asChild>
           <Link href="/documents">
-            Enter Jotion
+            Enter EasyNotes
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </Button>
@@ -35,7 +35,7 @@ export const Heading = () => {
       {!user && !isLoading && (
         <LoginButton mode="modal" asChild>
           <Button>
-            Get Jotion free
+            Get EasyNotes free
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </LoginButton>

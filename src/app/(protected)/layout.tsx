@@ -1,16 +1,26 @@
-import { Navbar } from "./_components/navbar";
+"use client";
 
-interface ProtectedLayoutProps {
-  children: React.ReactNode;
-}
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { Spinner } from "@/components/spinner";
+import { Navigation } from "./_components/navigation";
 
-const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   return (
-    <div className="h-screen w-full flex flex-col gap-y-10 items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-300 to-green-400">
-      <Navbar />
-      {children}
+    <div className="h-full flex dark:bg-[#1F1F1F]">
+      <Navigation />
+      <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );
 };
 
-export default ProtectedLayout;
+export default MainLayout;
