@@ -34,7 +34,7 @@ import { FormSuccess } from "@/components/form-success";
 import { UserRole } from "@prisma/client";
 
 const SettingsPage = () => {
-  const user = useCurrentUser();
+  const { user } = useCurrentUser();
 
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
