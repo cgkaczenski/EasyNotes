@@ -2,8 +2,8 @@
 
 import { ChevronsLeft, MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { ElementRef, useEffect, useRef, useState, useCallback } from "react";
-import { useMediaQuery } from "usehooks-ts";
+import { ElementRef, useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "@/hooks/use-better-media-query";
 import { cn } from "@/lib/utils";
 
 export const Navigation = () => {
@@ -15,6 +15,15 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    } else {
+      resetWidth();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -56,7 +65,7 @@ export const Navigation = () => {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const resetWidth = useCallback(() => {
+  const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
       setIsCollapsed(false);
       setIsResetting(true);
@@ -69,7 +78,7 @@ export const Navigation = () => {
       navbarRef.current.style.setProperty("left", isMobile ? "100%" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
-  }, [isMobile]);
+  };
 
   const collapse = () => {
     if (sidebarRef.current && navbarRef.current) {
