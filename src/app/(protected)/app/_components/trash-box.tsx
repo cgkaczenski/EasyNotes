@@ -55,8 +55,11 @@ export const TrashBox = () => {
   ) => {
     event.stopPropagation();
     const promise = restoreDocument(documentId);
-    const documentsToRemove = removeDocumentAndChildren(documentId);
-    setDocuments(documents.filter((doc) => !documentsToRemove.includes(doc)));
+
+    promise.then(() => {
+      const documentsToRemove = removeDocumentAndChildren(documentId);
+      setDocuments(documents.filter((doc) => !documentsToRemove.includes(doc)));
+    });
 
     toast.promise(promise, {
       loading: "Restoring note...",
@@ -68,17 +71,18 @@ export const TrashBox = () => {
   const onRemove = (documentId: Document["id"]) => {
     const promise = deleteDocument(documentId);
 
+    promise.then(() => {
+      setDocuments(documents.filter((doc) => doc.id !== documentId));
+      if (params.documentId === documentId) {
+        router.push("/app/documents");
+      }
+    });
+
     toast.promise(promise, {
       loading: "Deleting note...",
       success: "Note deleted!",
-      error: " Failed to delete note.",
+      error: "Failed to delete note.",
     });
-
-    setDocuments(documents.filter((doc) => doc.id !== documentId));
-
-    if (params.documentId === documentId) {
-      router.push("/app/documents");
-    }
   };
 
   if (loading) {
