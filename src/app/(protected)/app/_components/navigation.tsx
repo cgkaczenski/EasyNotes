@@ -1,12 +1,20 @@
 "use client";
 
 import { useDocumentContext } from "@/hooks/use-document-context";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/use-better-media-query";
 import { UserItem } from "./user-item";
+import { Item } from "./item";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -19,7 +27,7 @@ export const Navigation = () => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
   const documentContext = useDocumentContext();
-  const { documents } = documentContext;
+  const { documents, handleAddDocument } = documentContext;
 
   useEffect(() => {
     if (isMobile) {
@@ -119,6 +127,19 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
+          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item label="Settings" icon={Settings} onClick={() => {}} />
+          <Item
+            onClick={async () =>
+              toast.promise(Promise.resolve(handleAddDocument("untitled")), {
+                loading: "Creating a new note...",
+                success: "New note created!",
+                error: "Failed to create a new note.",
+              })
+            }
+            label="New page"
+            icon={PlusCircle}
+          />
         </div>
         <div className="mt-4">
           {documents?.map((document) => (
