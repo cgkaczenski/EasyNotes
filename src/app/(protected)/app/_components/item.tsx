@@ -1,13 +1,15 @@
 "use client";
 
-import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
-
+import { useDocumentContext } from "@/hooks/use-document-context";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown, ChevronRight, LucideIcon, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { Document } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
 interface ItemProps {
   id?: Document["id"];
-  documentIcon?: string;
+  documentIcon?: string | null;
   active?: boolean;
   expanded?: boolean;
   isSearch?: boolean;
@@ -30,6 +32,33 @@ export const Item = ({
   onExpand,
   expanded,
 }: ItemProps) => {
+  const { handleAddDocument } = useDocumentContext();
+
+  const handleExpand = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    onExpand?.();
+  };
+
+  const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (!id) return;
+    const promise = handleAddDocument({
+      title: "Untitled",
+      parentId: id,
+    }).then(() => {
+      if (!expanded) {
+        onExpand?.();
+      }
+    });
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note.",
+    });
+  };
+
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
   return (
@@ -48,7 +77,7 @@ export const Item = ({
         <div
           role="button"
           className="h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1"
-          onClick={() => {}}
+          onClick={handleExpand}
         >
           <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
         </div>
@@ -64,6 +93,31 @@ export const Item = ({
           <span className="text-xs">⌘</span>K
         </kbd>
       )}
+      {!!id && (
+        <div className="ml-auto flex items-center gap-x-2">
+          <div
+            role="button"
+            onClick={onCreate}
+            className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600"
+          >
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
+  return (
+    <div
+      style={{
+        paddingLeft: level ? `${level * 12 + 25}px` : "12px",
+      }}
+      className="flex gap-x-2 py-[3px]"
+    >
+      <Skeleton className="h-4 w-4" />
+      <Skeleton className="h-4 w-[30%]" />
     </div>
   );
 };

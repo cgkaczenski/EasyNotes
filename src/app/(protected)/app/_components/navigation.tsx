@@ -1,6 +1,10 @@
 "use client";
 
 import { useDocumentContext } from "@/hooks/use-document-context";
+import { useMediaQuery } from "@/hooks/use-better-media-query";
+import { UserItem } from "./user-item";
+import { DocumentList } from "./document-list";
+import { Item } from "./item";
 import {
   ChevronsLeft,
   MenuIcon,
@@ -10,9 +14,6 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
-import { useMediaQuery } from "@/hooks/use-better-media-query";
-import { UserItem } from "./user-item";
-import { Item } from "./item";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -26,8 +27,7 @@ export const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  const documentContext = useDocumentContext();
-  const { documents, handleAddDocument } = documentContext;
+  const { handleAddDocument } = useDocumentContext();
 
   useEffect(() => {
     if (isMobile) {
@@ -131,20 +131,21 @@ export const Navigation = () => {
           <Item label="Settings" icon={Settings} onClick={() => {}} />
           <Item
             onClick={async () =>
-              toast.promise(Promise.resolve(handleAddDocument("untitled")), {
-                loading: "Creating a new note...",
-                success: "New note created!",
-                error: "Failed to create a new note.",
-              })
+              toast.promise(
+                Promise.resolve(handleAddDocument({ title: "Untitled" })),
+                {
+                  loading: "Creating a new note...",
+                  success: "New note created!",
+                  error: "Failed to create a new note.",
+                }
+              )
             }
             label="New page"
             icon={PlusCircle}
           />
         </div>
         <div className="mt-4">
-          {documents?.map((document) => (
-            <p key={document.id}>{document.title}</p>
-          ))}
+          <DocumentList />
         </div>
         <div
           onMouseDown={handleMouseDown}

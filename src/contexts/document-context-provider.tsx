@@ -11,7 +11,13 @@ type DocumentContextProps = {
 
 type TDocumentContext = {
   documents: Document[];
-  handleAddDocument: (documentTitle: string) => Promise<null>;
+  handleAddDocument: ({
+    title,
+    parentId,
+  }: {
+    title: string;
+    parentId?: Document["id"];
+  }) => Promise<null>;
 };
 
 export const DocumentContext = createContext<TDocumentContext | null>(null);
@@ -45,12 +51,18 @@ function DocumentContextProviderContent({
 
   const documents = useMemo(() => optimisticDocuments, [optimisticDocuments]);
 
-  const handleAddDocument = async (documentTitle: string) => {
+  const handleAddDocument = async ({
+    title,
+    parentId,
+  }: {
+    title: string;
+    parentId?: Document["id"];
+  }) => {
     setOptimisticDocuments({
       action: "add",
-      payload: { title: documentTitle },
+      payload: { title },
     });
-    await addDocument(documentTitle);
+    await addDocument(title, parentId);
     return null;
   };
 

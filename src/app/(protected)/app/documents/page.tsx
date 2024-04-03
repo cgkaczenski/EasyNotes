@@ -9,8 +9,7 @@ import { toast } from "sonner";
 
 const DocumentsPage = () => {
   const { user } = useCurrentUser();
-  const documentContext = useDocumentContext();
-  const { handleAddDocument } = documentContext;
+  const { handleAddDocument } = useDocumentContext();
 
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -33,11 +32,14 @@ const DocumentsPage = () => {
       </h2>
       <Button
         onClick={async () =>
-          toast.promise(Promise.resolve(handleAddDocument("untitled")), {
-            loading: "Creating a new note...",
-            success: "New note created!",
-            error: "Failed to create a new note.",
-          })
+          toast.promise(
+            Promise.resolve(handleAddDocument({ title: "Untitled" })),
+            {
+              loading: "Creating a new note...",
+              success: "New note created!",
+              error: "Failed to create a new note.",
+            }
+          )
         }
       >
         <PlusCircle className="h-4 w-4 mr-2" />

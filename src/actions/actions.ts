@@ -16,6 +16,10 @@ export async function getDocuments() {
     const documents = await db.document.findMany({
       where: {
         userId: user.id as string,
+        isArchived: false,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -25,7 +29,7 @@ export async function getDocuments() {
   }
 }
 
-export async function addDocument(documentTitle: string) {
+export async function addDocument(documentTitle: string, parentId?: string) {
   const user = await currentUser();
   if (!user) {
     throw new Error("You must be logged in to create a document");
@@ -36,6 +40,7 @@ export async function addDocument(documentTitle: string) {
       data: {
         title: documentTitle,
         userId: user.id as string,
+        parentDocumentId: parentId ? parentId : undefined,
       },
     });
   } catch (error) {
