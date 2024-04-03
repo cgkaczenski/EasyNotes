@@ -1,6 +1,6 @@
 "use client";
 
-import { addDocument } from "@/actions/actions";
+import { addDocument, archiveDocument } from "@/actions/actions";
 import { createContext, useMemo, useOptimistic } from "react";
 import { Document } from "@prisma/client";
 
@@ -18,6 +18,7 @@ type TDocumentContext = {
     title: string;
     parentId?: Document["id"];
   }) => Promise<null>;
+  handleArchiveDocument: ({ id }: { id: Document["id"] }) => Promise<null>;
 };
 
 export const DocumentContext = createContext<TDocumentContext | null>(null);
@@ -37,12 +38,34 @@ function DocumentContextProviderContent({
   data,
   children,
 }: DocumentContextProps) {
+  const isDocumentOrDescendant = (
+    documents: Document[],
+    currentDocumentId: Document["id"],
+    targetDocumentId: Document["id"]
+  ): boolean => {
+    if (currentDocumentId === targetDocumentId) {
+      return true;
+    }
+
+    const children = documents.filter(
+      (doc) => doc.parentDocumentId === currentDocumentId
+    );
+    return children.some((child) =>
+      isDocumentOrDescendant(documents, child.id, targetDocumentId)
+    );
+  };
+
   const [optimisticDocuments, setOptimisticDocuments] = useOptimistic(
     data,
     (state, { action, payload }) => {
       switch (action) {
         case "add":
           return [...state, { ...payload, id: Math.random().toString() }];
+        case "archive":
+          return state.filter(
+            (document) =>
+              !isDocumentOrDescendant(state, document.id, payload.documentId)
+          );
         default:
           return state;
       }
@@ -66,11 +89,21 @@ function DocumentContextProviderContent({
     return null;
   };
 
+  const handleArchiveDocument = async ({ id }: { id: Document["id"] }) => {
+    setOptimisticDocuments({
+      action: "archive",
+      payload: { id },
+    });
+    await archiveDocument(id);
+    return null;
+  };
+
   return (
     <DocumentContext.Provider
       value={{
         documents,
         handleAddDocument,
+        handleArchiveDocument,
       }}
     >
       {children}
