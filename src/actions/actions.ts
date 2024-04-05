@@ -252,3 +252,57 @@ export async function deleteDocument(documentId: Document["id"]) {
 
   revalidatePath("/app", "layout");
 }
+
+export async function updateDocument({
+  id,
+  title,
+  content,
+  coverImageUrl,
+  icon,
+  isPublished,
+}: {
+  id: Document["id"];
+  title?: Document["title"];
+  content?: Document["content"];
+  coverImageUrl?: Document["coverImageUrl"];
+  icon?: Document["icon"];
+  isPublished?: Document["isPublished"];
+}) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("You must be logged in to update a document");
+  }
+
+  const document = await db.document.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!document) {
+    throw new Error("Document not found");
+  }
+
+  if (document.userId !== user.id) {
+    throw new Error("You do not have permission to update this document");
+  }
+
+  try {
+    await db.document.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: title ? title : document.title,
+        content: content ? content : document.content,
+        coverImageUrl: coverImageUrl ? coverImageUrl : document.coverImageUrl,
+        icon: icon ? icon : document.icon,
+        isPublished: isPublished ? isPublished : document.isPublished,
+      },
+    });
+  } catch (error) {
+    throw new Error("Failed to update the document");
+  }
+
+  revalidatePath("/app", "layout");
+}

@@ -44,7 +44,7 @@ export const Navbar = () => {
         {user && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/documents">Enter EasyNotes</Link>
+              <Link href="/app/documents">Enter EasyNotes</Link>
             </Button>
             <UserButton />
           </>

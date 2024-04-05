@@ -1,7 +1,11 @@
 "use client";
 
-import { addDocument, archiveDocument } from "@/actions/actions";
-import { createContext, useMemo, useOptimistic } from "react";
+import {
+  addDocument,
+  archiveDocument,
+  updateDocument,
+} from "@/actions/actions";
+import { createContext, useMemo, useOptimistic, useState } from "react";
 import { Document } from "@prisma/client";
 
 type DocumentContextProps = {
@@ -11,6 +15,8 @@ type DocumentContextProps = {
 
 type TDocumentContext = {
   documents: Document[];
+  selectedDocument: Document | undefined;
+  handleChangeDocumentId: (id: Document["id"]) => void;
   handleAddDocument: ({
     title,
     parentId,
@@ -19,6 +25,21 @@ type TDocumentContext = {
     parentId?: Document["id"];
   }) => Promise<null>;
   handleArchiveDocument: ({ id }: { id: Document["id"] }) => Promise<null>;
+  handleUpdateDocument: ({
+    id,
+    title,
+    content,
+    coverImageUrl,
+    icon,
+    isPublished,
+  }: {
+    id: Document["id"];
+    title?: Document["title"];
+    content?: Document["content"];
+    coverImageUrl?: Document["coverImageUrl"];
+    icon?: Document["icon"];
+    isPublished?: Document["isPublished"];
+  }) => Promise<null>;
 };
 
 export const DocumentContext = createContext<TDocumentContext | null>(null);
@@ -54,7 +75,9 @@ function DocumentContextProviderContent({
       isDocumentOrDescendant(documents, child.id, targetDocumentId)
     );
   };
-
+  const [selectedDocumentId, setSelectedDocumentId] = useState<
+    Document["id"] | null
+  >(null);
   const [optimisticDocuments, setOptimisticDocuments] = useOptimistic(
     data,
     (state, { action, payload }) => {
@@ -66,6 +89,10 @@ function DocumentContextProviderContent({
             (document) =>
               !isDocumentOrDescendant(state, document.id, payload.documentId)
           );
+        case "edit":
+          return state.map((document) =>
+            document.id === payload.id ? { ...document, ...payload } : document
+          );
         default:
           return state;
       }
@@ -73,6 +100,13 @@ function DocumentContextProviderContent({
   );
 
   const documents = useMemo(() => optimisticDocuments, [optimisticDocuments]);
+  const selectedDocument = documents.find(
+    (doc) => doc.id === selectedDocumentId
+  );
+
+  const handleChangeDocumentId = (id: Document["id"]) => {
+    setSelectedDocumentId(id);
+  };
 
   const handleAddDocument = async ({
     title,
@@ -98,12 +132,45 @@ function DocumentContextProviderContent({
     return null;
   };
 
+  const handleUpdateDocument = async ({
+    id,
+    title,
+    content,
+    coverImageUrl,
+    icon,
+    isPublished,
+  }: {
+    id: Document["id"];
+    title?: Document["title"];
+    content?: Document["content"];
+    coverImageUrl?: Document["coverImageUrl"];
+    icon?: Document["icon"];
+    isPublished?: Document["isPublished"];
+  }) => {
+    setOptimisticDocuments({
+      action: "edit",
+      payload: { id, title, content, coverImageUrl, icon, isPublished },
+    });
+    await updateDocument({
+      id,
+      title,
+      content,
+      coverImageUrl,
+      icon,
+      isPublished,
+    });
+    return null;
+  };
+
   return (
     <DocumentContext.Provider
       value={{
         documents,
+        selectedDocument,
+        handleChangeDocumentId,
         handleAddDocument,
         handleArchiveDocument,
+        handleUpdateDocument,
       }}
     >
       {children}

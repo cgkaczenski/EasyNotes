@@ -22,9 +22,7 @@ export const DocumentList = ({
   const router = useRouter();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const documentContext = useDocumentContext();
-  const { documents } = documentContext;
-
+  const { documents } = useDocumentContext();
   const filteredDocuments = documents.filter((document) => {
     if (parentDocumentId) {
       return document.parentDocumentId === parentDocumentId;
@@ -40,7 +38,7 @@ export const DocumentList = ({
   };
 
   const onRedirect = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+    router.push(`/app/documents/${documentId}`);
   };
 
   if (documents === undefined) {

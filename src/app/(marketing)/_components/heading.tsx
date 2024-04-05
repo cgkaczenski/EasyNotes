@@ -26,7 +26,7 @@ export const Heading = () => {
       )}
       {user && !isLoading && (
         <Button asChild>
-          <Link href="/documents">
+          <Link href="/app/documents">
             Enter EasyNotes
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
