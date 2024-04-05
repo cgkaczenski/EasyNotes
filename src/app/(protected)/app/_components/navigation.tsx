@@ -3,6 +3,7 @@
 import { useDocumentContext } from "@/hooks/use-document-context";
 import { useMediaQuery } from "@/hooks/use-better-media-query";
 import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
 import { UserItem } from "./user-item";
 import { DocumentList } from "./document-list";
 import { Item } from "./item";
@@ -30,6 +31,7 @@ export const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const search = useSearch();
+  const settings = useSettings();
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
@@ -137,7 +139,7 @@ export const Navigation = () => {
         <div>
           <UserItem />
           <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
-          <Item label="Settings" icon={Settings} onClick={() => {}} />
+          <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
           <Item
             onClick={async () =>
               toast.promise(
