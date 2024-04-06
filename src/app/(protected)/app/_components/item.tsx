@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Document } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface ItemProps {
@@ -47,6 +48,7 @@ export const Item = ({
   onExpand,
   expanded,
 }: ItemProps) => {
+  const router = useRouter();
   const { user } = useCurrentUser();
   const { handleAddDocument, handleArchiveDocument } = useDocumentContext();
 
@@ -60,6 +62,8 @@ export const Item = ({
       success: "Note moved to trash!",
       error: "Failed to archive note.",
     });
+
+    router.push("/app/documents");
   };
 
   const handleExpand = (

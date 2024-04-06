@@ -33,10 +33,6 @@ export const TrashBox = () => {
     return document.title.toLowerCase().includes(search.toLowerCase());
   });
 
-  const onClick = (documentId: string) => {
-    router.push(`/app/documents/${documentId}`);
-  };
-
   const removeDocumentAndChildren = (documentId: Document["id"]) => {
     const documentsToRemove = documents.filter((doc) => doc.id === documentId);
 
@@ -59,6 +55,7 @@ export const TrashBox = () => {
     promise.then(() => {
       const documentsToRemove = removeDocumentAndChildren(documentId);
       setDocuments(documents.filter((doc) => !documentsToRemove.includes(doc)));
+      router.push(`/app/documents/${documentId}`);
     });
 
     toast.promise(promise, {
@@ -111,8 +108,6 @@ export const TrashBox = () => {
         {filteredDocuments?.map((document) => (
           <div
             key={document.id}
-            role="button"
-            onClick={() => onClick(document.id)}
             className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between"
           >
             <span className="truncate pl-2">{document.title}</span>
