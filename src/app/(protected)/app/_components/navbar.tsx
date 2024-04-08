@@ -5,6 +5,7 @@ import { Title } from "./title";
 import { Banner } from "./banner";
 import { Menu } from "./menu";
 import { Document } from "@prisma/client";
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { MenuIcon } from "lucide-react";
 
@@ -17,13 +18,15 @@ export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
   const { handleChangeDocumentId, selectedDocument } = useDocumentContext();
 
-  if (
-    params &&
-    params.documentId &&
-    params.documentId !== selectedDocument?.id
-  ) {
-    handleChangeDocumentId(params.documentId as Document["id"]);
-  }
+  useEffect(() => {
+    if (
+      params &&
+      params.documentId &&
+      params.documentId !== selectedDocument?.id
+    ) {
+      handleChangeDocumentId(params.documentId as Document["id"]);
+    }
+  }, [params, selectedDocument, handleChangeDocumentId]);
 
   const document = selectedDocument;
 
