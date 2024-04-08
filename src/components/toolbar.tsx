@@ -4,7 +4,7 @@ import { useDocumentContext } from "@/hooks/use-document-context";
 import { Button } from "@/components/ui/button";
 import { Document } from "@prisma/client";
 import { ElementRef, useRef, useState, useTransition } from "react";
-import { ImageIcon, Smile, X } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 
 interface ToolbarProps {
@@ -17,7 +17,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
   const { handleUpdateDocument } = useDocumentContext();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const enableInput = () => {
     if (preview) return;
