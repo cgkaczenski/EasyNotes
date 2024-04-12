@@ -57,7 +57,7 @@ export const UserItem = () => {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem>
           <LogoutButton className="w-full cursor-pointer text-muted-foreground hover:bg-muted">
             Log out
           </LogoutButton>

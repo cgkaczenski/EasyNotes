@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Document } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { startTransition } from "react";
 
 interface ItemProps {
   id?: Document["id"];
@@ -55,15 +56,16 @@ export const Item = ({
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = handleArchiveDocument({ id });
 
-    toast.promise(promise, {
-      loading: "Moving to trash...",
-      success: "Note moved to trash!",
-      error: "Failed to archive note.",
+    startTransition(() => {
+      const promise = handleArchiveDocument({ id });
+      toast.promise(promise, {
+        loading: "Moving to trash...",
+        success: "Note moved to trash!",
+        error: "Failed to archive note.",
+      });
+      router.push("/app/documents");
     });
-
-    router.push("/app/documents");
   };
 
   const handleExpand = (
@@ -76,18 +78,20 @@ export const Item = ({
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = handleAddDocument({
-      title: "Untitled",
-      parentId: id,
-    }).then(() => {
-      if (!expanded) {
-        onExpand?.();
-      }
-    });
-    toast.promise(promise, {
-      loading: "Creating a new note...",
-      success: "New note created!",
-      error: "Failed to create a new note.",
+    startTransition(() => {
+      const promise = handleAddDocument({
+        title: "Untitled",
+        parentId: id,
+      }).then(() => {
+        if (!expanded) {
+          onExpand?.();
+        }
+      });
+      toast.promise(promise, {
+        loading: "Creating a new note...",
+        success: "New note created!",
+        error: "Failed to create a new note.",
+      });
     });
   };
 

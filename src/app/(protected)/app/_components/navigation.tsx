@@ -24,7 +24,13 @@ import {
   Trash,
 } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
-import { ElementRef, useEffect, useRef, useState } from "react";
+import {
+  ElementRef,
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -145,7 +151,11 @@ export const Navigation = () => {
           <Item
             onClick={async () =>
               toast.promise(
-                Promise.resolve(handleAddDocument({ title: "Untitled" })),
+                new Promise(() => {
+                  startTransition(() => {
+                    handleAddDocument({ title: "Untitled" });
+                  });
+                }),
                 {
                   loading: "Creating a new note...",
                   success: "New note created!",
@@ -162,7 +172,11 @@ export const Navigation = () => {
           <Item
             onClick={async () =>
               toast.promise(
-                Promise.resolve(handleAddDocument({ title: "Untitled" })),
+                new Promise(() => {
+                  startTransition(() => {
+                    handleAddDocument({ title: "Untitled" });
+                  });
+                }),
                 {
                   loading: "Creating a new note...",
                   success: "New note created!",
