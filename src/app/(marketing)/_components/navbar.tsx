@@ -1,5 +1,4 @@
 "use client";
-
 import { useScrollTop } from "@/hooks/use-scroll-top";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -23,7 +22,7 @@ export const Navbar = () => {
       )}
     >
       <Logo />
-      <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
+      <div className="ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
         {isLoading && (
           <div className="w-full flex items-center justify-center">
             <Spinner size="lg" />
@@ -31,23 +30,27 @@ export const Navbar = () => {
         )}
         {!user && !isLoading && (
           <>
-            <LoginButton mode="modal" asChild>
-              <Button variant="ghost" size="sm">
-                Log in
-              </Button>
-            </LoginButton>
-            <LoginButton mode="modal" asChild>
-              <Button size="sm">Get EasyNotes free</Button>
-            </LoginButton>
+            <div className="flex items-center gap-x-2">
+              <LoginButton mode="modal" asChild>
+                <Button variant="ghost" size="sm">
+                  Log in
+                </Button>
+              </LoginButton>
+              <LoginButton mode="modal" asChild>
+                <Button size="sm">Get EasyNotes free</Button>
+              </LoginButton>
+            </div>
           </>
         )}
         {user && !isLoading && (
-          <>
+          <div className="flex items-center gap-x-2">
             <Button variant="ghost" size="sm" asChild>
               <Link href="/app/documents">Enter EasyNotes</Link>
             </Button>
-            <UserButton />
-          </>
+            <div className="md:ml-2">
+              <UserButton />
+            </div>
+          </div>
         )}
         <ModeToggle />
       </div>
