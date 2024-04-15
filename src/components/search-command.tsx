@@ -52,24 +52,27 @@ export const SearchCommand = () => {
     <CommandDialog open={isOpen} onOpenChange={onClose}>
       <CommandInput placeholder={`Search ${user?.name}'s EasyNote...`} />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Documents">
-          {documents?.map((document: Document) => (
-            <CommandItem
-              key={document.id}
-              value={`${document.id}`}
-              title={document.title}
-              onSelect={() => onSelect(document.id)}
-            >
-              {document.icon ? (
-                <p className="mr-2 text-[18px]">{document.icon}</p>
-              ) : (
-                <File className="mr-2 h-4 w-4" />
-              )}
-              <span>{document.title}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {documents.length === 0 ? (
+          <CommandEmpty>No results found.</CommandEmpty>
+        ) : (
+          <CommandGroup heading="Documents">
+            {documents.map((document) => (
+              <CommandItem
+                key={document.id}
+                value={`${document.id}-${document.title}`}
+                title={document.title}
+                onSelect={() => onSelect(document.id)}
+              >
+                {document.icon ? (
+                  <p className="mr-2 text-[18px]">{document.icon}</p>
+                ) : (
+                  <File className="mr-2 h-4 w-4" />
+                )}
+                <span>{document.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
       </CommandList>
     </CommandDialog>
   );
