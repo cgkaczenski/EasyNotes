@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import { Item } from "./item";
 import { Document } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ export const DocumentList = ({
   const router = useRouter();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const { documents } = useDocumentContext();
+  const { documents } = useDocument();
   const filteredDocuments = documents.filter((document) => {
     if (parentDocumentId) {
       return document.parentDocumentId === parentDocumentId;

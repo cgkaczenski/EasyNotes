@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import { Title } from "./title";
 import { Banner } from "./banner";
 import { Menu } from "./menu";
@@ -16,7 +16,7 @@ interface NavbarProps {
 
 export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
-  const { handleChangeDocumentId, selectedDocument } = useDocumentContext();
+  const { handleChangeDocumentId, selectedDocument } = useDocument();
 
   useEffect(() => {
     if (

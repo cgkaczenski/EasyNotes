@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -51,7 +51,7 @@ export const Item = ({
 }: ItemProps) => {
   const router = useRouter();
   const { user } = useCurrentUser();
-  const { handleAddDocument, handleArchiveDocument } = useDocumentContext();
+  const { handleAddDocument, handleArchiveDocument } = useDocument();
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();

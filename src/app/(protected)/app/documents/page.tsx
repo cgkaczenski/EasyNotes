@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import Image from "next/image";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { PlusCircle } from "lucide-react";
@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 const DocumentsPage = () => {
   const { user } = useCurrentUser();
-  const { handleAddDocument } = useDocumentContext();
+  const { handleAddDocument } = useDocument();
 
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">

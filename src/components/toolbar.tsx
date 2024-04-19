@@ -1,6 +1,7 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
+import { useCoverImage } from "@/hooks/use-cover-image";
 import { Button } from "@/components/ui/button";
 import { Document } from "@prisma/client";
 import { ElementRef, useRef, useState, useTransition } from "react";
@@ -16,7 +17,8 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<"textarea">>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
-  const { handleUpdateDocument } = useDocumentContext();
+  const { handleUpdateDocument } = useDocument();
+  const coverImage = useCoverImage();
   const [, startTransition] = useTransition();
 
   const enableInput = () => {
@@ -55,7 +57,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
         {!initialData.coverImageUrl && !preview && (
           <Button
-            onClick={() => {}}
+            onClick={coverImage.onOpen}
             className="text-muted-foreground text-xs"
             variant="outline"
             size="sm"

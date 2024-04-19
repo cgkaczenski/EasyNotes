@@ -306,3 +306,25 @@ export async function updateDocument({
 
   revalidatePath("/app", "layout");
 }
+
+export async function removeCoverImage(id: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("You must be logged in to delete a cover image");
+  }
+
+  try {
+    await db.document.update({
+      where: {
+        id: id,
+      },
+      data: {
+        coverImageUrl: null,
+      },
+    });
+  } catch (error) {
+    throw new Error("Failed to remove the cover image");
+  }
+
+  revalidatePath("/app", "layout");
+}

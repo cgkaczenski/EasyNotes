@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import { useMediaQuery } from "@/hooks/use-better-media-query";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
@@ -46,7 +46,7 @@ export const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  const { handleAddDocument } = useDocumentContext();
+  const { handleAddDocument } = useDocument();
 
   useEffect(() => {
     if (isMobile) {

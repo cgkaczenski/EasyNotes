@@ -1,7 +1,8 @@
 "use client";
 import { updateDocument } from "@/actions/actions";
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import { Toolbar } from "@/components/toolbar";
+import { Cover } from "@/components/cover";
 import dynamic from "next/dynamic";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
@@ -12,7 +13,7 @@ const DocumentIdPage = () => {
     []
   );
 
-  const { selectedDocument } = useDocumentContext();
+  const { selectedDocument } = useDocument();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const toastIdRef = useRef<string | number | null>(null);
 
@@ -54,7 +55,7 @@ const DocumentIdPage = () => {
 
   return (
     <div className="pb-40">
-      <div className="h-[35vh]" />
+      <Cover />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={selectedDocument} />
         <Editor onChange={onChange} initialContent={selectedDocument.content} />

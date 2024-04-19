@@ -30,6 +30,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@sendgrid/mail": "^8.1.1",
+    "@supabase/storage-js": "^2.5.5",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
@@ -42,6 +43,7 @@
     "prisma": "^5.11.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.1",
     "react-icons": "^5.0.1",
     "react-spinners": "^0.13.8",
@@ -50,7 +52,7 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

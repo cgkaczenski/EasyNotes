@@ -2,7 +2,7 @@
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSearch } from "@/hooks/use-search";
-import { useDocumentContext } from "@/hooks/use-document-context";
+import { useDocument } from "@/hooks/use-document";
 import {
   CommandDialog,
   CommandEmpty,
@@ -21,7 +21,7 @@ export const SearchCommand = () => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const { isOpen, onClose, toggle } = useSearch();
-  const { documents } = useDocumentContext();
+  const { documents } = useDocument();
 
   useEffect(() => {
     setIsMounted(true);

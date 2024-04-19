@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { DocumentContext } from "@/contexts/document-context-provider";
 
-export function useDocumentContext() {
+export function useDocument() {
   const context = useContext(DocumentContext);
 
   if (!context) {
