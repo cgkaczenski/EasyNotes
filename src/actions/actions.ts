@@ -48,6 +48,27 @@ export async function getDocuments() {
   }
 }
 
+export async function getPublishedDocumentById(documentId: Document["id"]) {
+  noStore();
+
+  try {
+    const document = await db.document.findUnique({
+      where: {
+        id: documentId,
+        isPublished: true,
+      },
+    });
+
+    if (!document) {
+      return null;
+    }
+
+    return document;
+  } catch (error) {
+    throw new Error("Failed to fetch the document");
+  }
+}
+
 export async function addDocument(
   documentTitle: Document["title"],
   parentId?: Document["parentDocumentId"]
@@ -293,11 +314,13 @@ export async function updateDocument({
         id: id,
       },
       data: {
-        title: title ? title : document.title,
-        content: content ? content : document.content,
-        coverImageUrl: coverImageUrl ? coverImageUrl : document.coverImageUrl,
-        icon: icon ? icon : document.icon,
-        isPublished: isPublished ? isPublished : document.isPublished,
+        title: title !== undefined ? title : document.title,
+        content: content !== undefined ? content : document.content,
+        coverImageUrl:
+          coverImageUrl !== undefined ? coverImageUrl : document.coverImageUrl,
+        icon: icon !== undefined ? icon : document.icon,
+        isPublished:
+          isPublished !== undefined ? isPublished : document.isPublished,
       },
     });
   } catch (error) {

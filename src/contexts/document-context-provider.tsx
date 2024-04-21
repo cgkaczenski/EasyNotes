@@ -45,11 +45,11 @@ type TDocumentContext = {
 export const DocumentContext = createContext<TDocumentContext | null>(null);
 
 export default function DocumentContextProvider({
-  data: leads,
+  data: documents,
   children,
 }: DocumentContextProps) {
   return (
-    <DocumentContextProviderContent data={leads}>
+    <DocumentContextProviderContent data={documents}>
       {children}
     </DocumentContextProviderContent>
   );

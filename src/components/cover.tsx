@@ -14,15 +14,16 @@ import { useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface CoverImageProps {
+  url?: string | null;
   preview?: boolean;
 }
 
-export const Cover = ({ preview }: CoverImageProps) => {
+export const Cover = ({ url, preview }: CoverImageProps) => {
   const params = useParams();
   const coverImage = useCoverImage();
   const { user } = useCurrentUser();
   const { selectedDocument } = useDocument();
-  const url = selectedDocument?.coverImageUrl;
+  const coverImageUrl = selectedDocument?.coverImageUrl || url;
 
   const onRemove = async () => {
     const bucket = "cover_image";
@@ -44,13 +45,13 @@ export const Cover = ({ preview }: CoverImageProps) => {
     <div
       className={cn(
         "relative w-full h-[35vh] group",
-        !url && "h-[12vh]",
-        url && "bg-muted"
+        !coverImageUrl && "h-[12vh]",
+        coverImageUrl && "bg-muted"
       )}
     >
-      {!!url && (
+      {!!coverImageUrl && (
         <Image
-          src={`${url}?timestamp=${Date.now()}`}
+          src={`${coverImageUrl}?timestamp=${Date.now()}`}
           fill
           alt="Cover"
           className="object-cover"
@@ -60,7 +61,7 @@ export const Cover = ({ preview }: CoverImageProps) => {
           }}
         />
       )}
-      {url && !preview && (
+      {coverImageUrl && !preview && (
         <div className="opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2">
           <Button
             onClick={() => coverImage.onOpen()}
